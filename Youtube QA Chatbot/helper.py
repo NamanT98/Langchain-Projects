@@ -1,8 +1,6 @@
 from dotenv import load_dotenv
-from sympy import true
 load_dotenv()
 
-from httpx import stream
 from langchain_community.document_loaders import YoutubeLoader
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -50,7 +48,7 @@ class ChatBot():
         return docs_page_content
     
     def get_llm(self):
-        llm=ChatGoogleGenerativeAI(model='gemini-pro',
+        llm=ChatGoogleGenerativeAI(model='gemini-1.5-pro-latest',
                             temperature=0.7,
                             top_p=0.85,
                             )
