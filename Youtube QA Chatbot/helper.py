@@ -7,7 +7,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings,ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage,SystemMessage,AIMessage
 
-class ChatBot():
+class ChatBot:
     def __init__(self) -> None:
         self.history =[SystemMessage(content="""
         You are a helpful assistant that that can answer questions about youtube videos
@@ -42,8 +42,6 @@ class ChatBot():
         
     def get_context(self,query):
         docs=self.db.similarity_search_with_score(query,8)
-        scores=[d[1] for d in docs]
-        print(sum(scores)/10)
         docs_page_content=" ".join([d[0].page_content for d in docs])
         return docs_page_content
     
