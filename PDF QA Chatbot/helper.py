@@ -21,6 +21,12 @@ class PdfChatbot:
                                      
         Your answers should be verbose and detailed.
         """)]
+
+        self.llm=ChatGoogleGenerativeAI(model='gemini-1.5-pro-latest',
+                            temperature=0.7,
+                            top_p=0.85,
+                            )
+        
     def create_db(self,docs):
         splitter=RecursiveCharacterTextSplitter(chunk_size=10000,chunk_overlap=2000)
         text=""
@@ -46,18 +52,9 @@ class PdfChatbot:
         Query:{query}"""
 
         return prompt
-    
-    def get_llm(self):
-        llm=ChatGoogleGenerativeAI(model='gemini-1.5-pro-latest',
-                            temperature=0.7,
-                            top_p=0.85,
-                            )
-        
-        return llm
 
     def run_chain(self,query):
         self.history.append(HumanMessage(content=self.create_prompt(query)))
-        llm=self.get_llm()
-        response=llm.invoke(self.history)
+        response=self.llm.invoke(self.history)
         self.history.append(AIMessage(content=response.content))
         return response.content

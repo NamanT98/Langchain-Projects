@@ -20,6 +20,11 @@ class ChatBot:
         Your answers should be verbose and detailed.
         """)]
 
+        self.llm=ChatGoogleGenerativeAI(model='gemini-1.5-pro-latest',
+                            temperature=0.7,
+                            top_p=0.85,
+                            )
+
     def create_prompt(self,query):
         prompt=f"""Using the transcript given below, answer the query.:
         
@@ -44,18 +49,9 @@ class ChatBot:
         docs=self.db.similarity_search_with_score(query,8)
         docs_page_content=" ".join([d[0].page_content for d in docs])
         return docs_page_content
-    
-    def get_llm(self):
-        llm=ChatGoogleGenerativeAI(model='gemini-1.5-pro-latest',
-                            temperature=0.7,
-                            top_p=0.85,
-                            )
-        
-        return llm
 
     def run_chain(self,query):
         self.history.append(HumanMessage(content=self.create_prompt(query)))
-        llm=self.get_llm()
-        response=llm.invoke(self.history)
+        response=self.llm.invoke(self.history)
         self.history.append(AIMessage(content=response.content))
         return response.content
