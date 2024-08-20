@@ -1,11 +1,8 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from langchain_community.document_loaders import YoutubeLoader
-from langchain_community.vectorstores import FAISS
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings,ChatGoogleGenerativeAI
-from langchain.schema import HumanMessage,SystemMessage,AIMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.schema import HumanMessage,SystemMessage
 
 class TextSummarizer:
     def __init__(self) -> None:
@@ -24,7 +21,8 @@ class TextSummarizer:
     def create_prompt(self,query):
         prompt=f"""Summarize the following text:
         
-        {query}"""
+        {query}
+        """
 
         return prompt
 
