@@ -2,8 +2,7 @@ from helper import *
 import streamlit as st
 
 st.title("Text Summarizer")
-if 'submit' not in st.session_state:
-    st.session_state.submit=False
+
 if 'chatbot' not in st.session_state:
     st.session_state.chatbot=TextSummarizer()
 
