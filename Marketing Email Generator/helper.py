@@ -1,12 +1,15 @@
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.schema import HumanMessage,SystemMessage
+from langchain.schema import HumanMessage, SystemMessage
+
 
 class EmailGenerator:
     def __init__(self) -> None:
-        self.system =SystemMessage(content="""
+        self.system = SystemMessage(
+            content="""
         You are an AI assistant specialized in creating personalized marketing emails. Your task is to generate a compelling and engaging email based on the given product description. The email should highlight the key features, benefits, and unique selling points of the product, and include a call-to-action that encourages the recipient to learn more or make a purchase.
 
 **Email Requirements:**
@@ -45,21 +48,25 @@ Best regards,
 [Your Company Name]
 [Contact Information]
 
-        """)
+        """
+        )
 
-        self.llm=ChatGoogleGenerativeAI(model='gemini-1.5-pro-latest',
-                            temperature=0.7,
-                            top_p=0.85,
-                            )
+        self.llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-pro-latest",
+            temperature=0.7,
+            top_p=0.85,
+        )
 
-    def create_prompt(self,query):
-        prompt=f"""
+    def create_prompt(self, query):
+        prompt = f"""
         Product Description:
         {query}
         """
 
         return prompt
 
-    def run_chain(self,query):
-        response=self.llm.invoke([self.system,HumanMessage(content=self.create_prompt(query))])
+    def run_chain(self, query):
+        response = self.llm.invoke(
+            [self.system, HumanMessage(content=self.create_prompt(query))]
+        )
         return response.content
