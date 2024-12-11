@@ -18,32 +18,30 @@ class HotelData(BaseTool):
     )
 
     def _run(self, source: str, destination: str, from_date: str, to_date: str) -> str:
-        url = "https://booking-com15.p.rapidapi.com/api/v1/hotels/searchDestination"
-
+        url = "https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchLocation"
         querystring = {"query": destination}
 
         headers = {
             "x-rapidapi-key": os.environ.get("RAPID_API_KEY"),
-            "x-rapidapi-host": "booking-com15.p.rapidapi.com",
+            "x-rapidapi-host": "tripadvisor16.p.rapidapi.com",
         }
 
         response = requests.get(url, headers=headers, params=querystring).json()
-        geoid = response["data"][0]["dest_id"]
+        geoid = response["data"][0]["geoId"]
 
-        url = "https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels"
-
+        url = "https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchHotels"
         querystring = {
-            "dest_id": f"{geoid}",
-            "search_type": "CITY",
-            "arrival_date": from_date,
-            "departure_date": to_date,
-            "currency_code": "INR",
+            "geoId": geoid,
+            "checkIn": from_date,
+            "checkOut": to_date,
+            "pageNumber": "1",
+            "currencyCode": "INR",
         }
 
         response = requests.get(url, headers=headers, params=querystring).json()
         hotels = []
-        for i in response["data"]["hotels"]:
-            hotels.append(i["property"]["name"])
+        for i in response["data"]["data"]:
+            hotels.append(i["title"])
         return {"Hotels": hotels}
 
     def _arun(self, radius: int):
@@ -61,7 +59,7 @@ class TravelAgent:
 
     def create_prompt(self):
         """Function to read customized agent prompt"""
-        with open("prompt.txt", "r") as f:
+        with open("Travel Planning Agent/prompt.txt", "r") as f:
             prompt = f.read()
         return prompt
 
@@ -91,5 +89,5 @@ class TravelAgent:
 
     def run_agent(self, query):
         """Function to run the agent"""
-        results = self.agent.invoke(query)
+        results = self.agent.run(query)
         return results
